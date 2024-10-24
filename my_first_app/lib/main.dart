@@ -14,11 +14,11 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
       child: MaterialApp(
-        debugShowCheckedModeBanner: false,
+        debugShowCheckedModeBanner: true,
         title: 'Namer App',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         ),
         home: MyHomePage(),
       ),
@@ -41,6 +41,13 @@ class MyAppState extends ChangeNotifier {
       favorites.remove(currentWord);
     } else {
       favorites.add(currentWord);
+    }
+    notifyListeners();
+  }
+
+  void removeFavorite(WordPair favorite) {
+    if (favorites.contains(favorite)) {
+      favorites.remove(favorite);
     }
     notifyListeners();
   }
@@ -180,8 +187,10 @@ class FavoritesPage extends StatelessWidget {
         ),
         for (var favorite in appState.favorites)
           ListTile(
-            leading: Icon(Icons.favorite),
             title: Text(favorite.asLowerCase),
+            trailing: IconButton(
+                onPressed: () => {appState.removeFavorite(favorite)},
+                icon: Icon(Icons.delete)),
           )
       ],
     );
